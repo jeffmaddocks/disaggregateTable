@@ -26,7 +26,15 @@ See [exampletable.xlsx](exampletable.xlsx) and [exploded.xlsx](exploded.xlsx) fo
 
 In the future, additional automation should be added to handle excel files with many cross-tables. Additional work would be needed to match an existing template.
 
-## Setup
+## Setup - Excel
+
+1. Copy this code to your clipboard: [explodeCrossTab.osts](explodeCrossTab.osts).
+
+2. In Excel > Automate tab > New Script button > choose "Write a script" on the right-side panel
+
+3. Delete everything that Excel puts in there by default ()typically there are 3 lines
+
+## Setup - python
 
 1. Download or clone this project. If you choose to download, setup a working directory first. Alternatively, the "git clone" command will create a directory with the name 'disaggregateTable' that contains this repository:
     ```
