@@ -32,7 +32,11 @@ In the future, additional automation should be added to handle excel files with 
 
 2. In Excel > Automate tab > New Script button > choose "Write a script" on the right-side panel
 
-3. Delete everything that Excel puts in there by default ()typically there are 3 lines
+3. Delete everything that Excel puts in there by default (typically there are 3 lines that need to be removed).
+
+4. Paste your clipboard into the script area and press the "Save Script" button. Now we need to rename it from "Script" to something more meaningful: click the ellipses to the right of the Run button and choose Rename, then name it "Explode CrossTab".
+
+5. The script is now ready to run: simply choose Automate > Office Scripts > Explode CrossTab
 
 ## Setup - python
 
