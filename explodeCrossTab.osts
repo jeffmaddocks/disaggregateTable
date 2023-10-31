@@ -11,12 +11,10 @@ async function main(workbook: ExcelScript.Workbook) {
     for (let i = 0; i < rangeValues.length; i++) {
         let col0 = rangeValues[i][0];
         // console.log(col0)
-
-        for (let j = 0; j < rangeValues[i].length; j++) {
-            let colCount = rangeValues[i][j];
-            let colName = rangeValues[0][j];
-            // console.log(colName)
-
+        for (let j = 1; j < rangeValues[i].length; j++) {
+          let colCount = rangeValues[i][j];
+          let colName = rangeValues[0][j];
+          // console.log(colName)
             if (typeof colCount === "number" && colCount > 0) {
                 for (let k = 0; k < colCount; k++) {
                     lst.push([col0.toString(), colName.toString()]);
@@ -26,7 +24,7 @@ async function main(workbook: ExcelScript.Workbook) {
     }
 
     // Create a new sheet
-    let newSheet = workbook.addWorksheet(sheet.getName() + '_exploded');
+    let newSheet = workbook.addWorksheet(sheet.getName() + '_exploded ');
     newSheet.getRange().setNumberFormat('@');
 
     // Write data to the new sheet
