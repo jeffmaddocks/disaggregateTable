@@ -26,17 +26,19 @@ See [exampletable.xlsx](exampletable.xlsx) and [exploded.xlsx](exploded.xlsx) fo
 
 In the future, additional automation should be added to handle excel files with many cross-tables. Additional work would be needed to match an existing template.
 
-## Setup - Excel
+## Setup - excel
 
-1. Copy this code to your clipboard: [explodeCrossTab.osts](explodeCrossTab.osts).
+1. Copy this code to your clipboard: [explodeCrossTab.osts](explodeCrossTab.osts)
 
-2. In Excel > Automate tab > New Script button > choose "Write a script" on the right-side panel
+2. In Excel > choose the Automate tab > New Script button > choose "Write a script" on the right-side panel
 
-3. Delete everything that Excel puts in there by default (typically there are 3 lines that need to be removed).
+3. Delete everything in the code editor that's there by default (typically there are 3 lines that need to be removed).
 
-4. Paste your clipboard into the script area and press the "Save Script" button. Now we need to rename it from "Script" to something more meaningful: click the ellipses to the right of the Run button and choose Rename, then name it "Explode CrossTab".
+4. Paste your clipboard into the script area and press the "Save Script" button.
 
-5. The script is now ready to run: simply choose Automate > Office Scripts > Explode CrossTab
+5. Rename the script by clicking the ellipses to the right of the Run button and choose Rename > then name it "Explode CrossTab"
+
+6. The script is now ready to run on any Excel sheet that has a single cross-tab: simply choose Automate > Office Scripts > Explode CrossTab
 
 ## Setup - python
 
