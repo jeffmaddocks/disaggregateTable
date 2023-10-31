@@ -26,7 +26,8 @@ async function main(workbook: ExcelScript.Workbook) {
     }
 
     // Create a new sheet
-    let newSheet = workbook.addWorksheet('NewSheet');
+    let newSheet = workbook.addWorksheet(sheet.getName() + '_exploded');
+    newSheet.getRange().setNumberFormat('@');
 
     // Write data to the new sheet
     for (let i = 0; i < lst.length; i++) {
