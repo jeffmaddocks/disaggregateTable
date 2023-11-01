@@ -26,7 +26,7 @@ See [exampletable.xlsx](exampletable.xlsx) and [exploded.xlsx](exploded.xlsx) fo
 
 In the future, additional automation should be added to handle excel files with many cross-tables. Additional work would be needed to match an existing template.
 
-## Setup - excel
+## Setup - excel (Office Script)
 
 1. Copy this code to your clipboard: [explodeCrossTab.osts](explodeCrossTab.osts)
 
@@ -38,7 +38,7 @@ In the future, additional automation should be added to handle excel files with 
 
 5. Rename the script by clicking the ellipses to the right of the Run button and choose Rename > then name it "Explode CrossTab"
 
-6. The script is now ready to run on any Excel sheet that has a single cross-tab: simply choose Automate > Office Scripts > Explode CrossTab
+6. The script is now ready to run on any Excel sheet that has a single cross-tab: simply choose Automate > Office Scripts > Explode CrossTab > Run
 
 ## Setup - python
 
