@@ -28,7 +28,7 @@ In the future, additional automation should be added to handle excel files with 
 
 ## Setup - excel (Office Script)
 
-1. Copy this code to your clipboard: [explodeCrossTab.osts](explodeCrossTab.osts)
+1. Copy this code to your clipboard: [explodeCrossTab.ts](explodeCrossTab.ts)
 
 2. In Excel > choose the Automate tab > New Script button > choose "Write a script" on the right-side panel
 
