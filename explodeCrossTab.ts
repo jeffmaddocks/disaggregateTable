@@ -11,6 +11,9 @@ async function main(workbook: ExcelScript.Workbook) {
     for (let i = 0; i < rangeValues.length; i++) {  //looping through the rows
       let col0 = rangeValues[i][0].toString();
       // console.log(col0)
+      if (i == 0) {
+        lst.push([null, col0.toString(), null] as [number, string, string])
+      }
       for (let j = 1; j < rangeValues[i].length; j++) {  //looping through the columns
         let colCount = rangeValues[i][j]; //this is the number in the cell of the crosstable
         let colName = rangeValues[0][j]; //this is the name of the column (row 0 of the column)
