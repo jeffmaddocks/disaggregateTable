@@ -6,13 +6,13 @@ async function main(workbook: ExcelScript.Workbook) {
   let rangeValues: Array<Array<string | number | boolean>> = range.getValues();
 
   // Process the data
-  let lst: Array<[number | string | string]> = [];
+  let lst: Array<[string, string, string]> = [];
   let icount = 0;
   for (let i = 0; i < rangeValues.length; i++) {  //looping through the rows
     let col0 = rangeValues[i][0].toString();
     // console.log(col0)
     if (i == 0) {
-      lst.push(['id', col0.toString(), null] as [string, string, string])
+      lst.push(['id', col0.toString(), ''])
     }
     for (let j = 1; j < rangeValues[i].length; j++) {  //looping through the columns
       let colCount = rangeValues[i][j]; //this is the number in the cell of the crosstable
@@ -21,7 +21,7 @@ async function main(workbook: ExcelScript.Workbook) {
       if (typeof colCount === "number" && colCount > 0) {
         for (let k = 0; k < colCount; k++) {  //looping through the value in the cell X number of times creating rows
           icount = icount + 1
-          lst.push([icount, col0.toString(), colName.toString()] as [number, string, string]);
+          lst.push([icount.toString(), col0.toString(), colName.toString()]);
         }
       }
     }
