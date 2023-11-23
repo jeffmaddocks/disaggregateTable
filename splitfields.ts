@@ -11,7 +11,8 @@ async function main(workbook: ExcelScript.Workbook) {
       let thisrow: string[] = [];
       for (let j = 0; j < rangeValues[i].length; j++) {  //looping through the columns
         let thiscell: string = typeof rangeValues[i][j] === 'string' ? rangeValues[i][j].toLowerCase() : String(rangeValues[i][j]);
-        let colName = rangeValues[0][j]; //this is the name of the column (row 0 of the column)
+        let colName: string = rangeValues[0][j].trim(); //this is the name of the column (row 0 of the column)
+
         if (colName == "Received Vaccine") {
           let received = "";
           if (thiscell.includes("covid")) { received = received + "Second (or later) dose of a COVID-19 vaccine; " }
@@ -24,16 +25,30 @@ async function main(workbook: ExcelScript.Workbook) {
           received = received.slice(0, -2);  // Trim the last two characters
           if (i == 0) { received = "Vaccinations received" }
           thisrow.push(received);
+
+        } else if (colName == "Gender") {
+            let usetext = "";
+            if (i == 0) {
+              usetext = 'Gender identification';
+            } else {
+                if (thiscell.includes("male") && !thiscell.includes("female")) {usetext = usetext + "Male; "}
+                if (thiscell.includes("female")) {usetext = usetext + "Female; "}
+                if (thiscell.includes("trans")) {usetext = usetext + "Transgender; "}
+                if (thiscell.includes("binary")) {usetext = usetext + "Non-binary or gender non-conforming person; "}
+                if (thiscell.includes("different")) {usetext = usetext + "Different identity; "}
+                if (thiscell.includes("answer")) {usetext = usetext + "I prefer not to answer; "}
+                usetext = usetext.slice(0, -2);  // Trim the last two characters
+            }
+            thisrow.push(usetext);
+            
         } else if (colName == "Patient Date of Birth") {
-  
-          let birthDate = new Date(thiscell);
+            let birthDate = new Date(thiscell);
           let today = new Date();
           let age = today.getFullYear() - birthDate.getFullYear();
           let m = today.getMonth() - birthDate.getMonth();
           if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { //account for dates where the birthday hasn't happened yet
             age--;
           }
-  
           let ageCategory: string;
           if (age < 18) {
             ageCategory = 'Under age 18';
@@ -58,10 +73,11 @@ async function main(workbook: ExcelScript.Workbook) {
               ageCategory = 'I prefer not to answer';
             }
           }
-  
-          thisrow.push(ageCategory);
+        thisrow.push(ageCategory);
+
         } else {
           thisrow.push(thiscell);
+
         }
       }
       lst.push(thisrow);
