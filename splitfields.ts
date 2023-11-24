@@ -12,7 +12,7 @@ async function main(workbook: ExcelScript.Workbook) {
       for (let j = 0; j < rangeValues[i].length; j++) {  //looping through the columns
         let thiscell: string = typeof rangeValues[i][j] === 'string' ? rangeValues[i][j].toLowerCase() : String(rangeValues[i][j]);
         let colName: string = rangeValues[0][j].trim(); //this is the name of the column (row 0 of the column)
-
+  
         if (colName == "Received Vaccine") {
           let received = "";
           if (thiscell.includes("covid")) { received = received + "Second (or later) dose of a COVID-19 vaccine; " }
@@ -25,36 +25,30 @@ async function main(workbook: ExcelScript.Workbook) {
           received = received.slice(0, -2);  // Trim the last two characters
           if (i == 0) { received = "Vaccinations received" }
           thisrow.push(received);
-
+  
         } else if (colName == "Gender") {
-            let usetext = "";
-            if (i == 0) {
-              usetext = 'Gender identification';
-            } else {
-                if (thiscell.includes("male") && !thiscell.includes("female")) {usetext = usetext + "Male; "}
-                if (thiscell.includes("female")) {usetext = usetext + "Female; "}
-                if (thiscell.includes("trans")) {usetext = usetext + "Transgender; "}
-                if (thiscell.includes("binary")) {usetext = usetext + "Non-binary or gender non-conforming person; "}
-                if (thiscell.includes("different")) {usetext = usetext + "Different identity; "}
-                if (thiscell.includes("answer")) {usetext = usetext + "I prefer not to answer; "}
-                usetext = usetext.slice(0, -2);  // Trim the last two characters
-            }
-            thisrow.push(usetext);
-            
+          let usetext = "";
+          if (i == 0) {
+            usetext = 'Gender identification';
+          } else {
+            if (thiscell.includes("male") && !thiscell.includes("female")) { usetext = usetext + "Male; " }
+            if (thiscell.includes("female")) { usetext = usetext + "Female; " }
+            if (thiscell.includes("trans")) { usetext = usetext + "Transgender; " }
+            if (thiscell.includes("binary")) { usetext = usetext + "Non-binary or gender non-conforming person; " }
+            if (thiscell.includes("different")) { usetext = usetext + "Different identity; " }
+            if (thiscell.includes("answer")) { usetext = usetext + "I prefer not to answer; " }
+            usetext = usetext.slice(0, -2);  // Trim the last two characters
+          }
+          thisrow.push(usetext);
+  
         } else if (colName == "Patient Date of Birth") {
-            // let birthDate = new Date(rangeValues[i][j]);
-
-            let date = new Date(rangeValues[i][j]);
-            let birthDate: Date = date;
-            let formattedDate: string = birthDate.toLocaleDateString('en-US', {
-                year: '2-digit',
-                month: '2-digit',
-                day: '2-digit'
-            });
-            
-            let today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-
+  
+          let excelDateValue = rangeValues[i][j] as number;
+          let birthDate = new Date(Math.round((excelDateValue - 25569) * 86400 * 1000));
+  
+          let today = new Date();
+          let age = today.getFullYear() - birthDate.getFullYear();
+  
           let m = today.getMonth() - birthDate.getMonth();
           if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { //account for dates where the birthday hasn't happened yet
             age--;
@@ -83,11 +77,11 @@ async function main(workbook: ExcelScript.Workbook) {
               ageCategory = 'I prefer not to answer';
             }
           }
-        thisrow.push(ageCategory);
-
+          thisrow.push(ageCategory);
+  
         } else {
           thisrow.push(thiscell);
-
+  
         }
       }
       lst.push(thisrow);
