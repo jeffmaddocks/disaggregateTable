@@ -42,9 +42,19 @@ async function main(workbook: ExcelScript.Workbook) {
             thisrow.push(usetext);
             
         } else if (colName == "Patient Date of Birth") {
-            let birthDate = new Date(thiscell);
-          let today = new Date();
-          let age = today.getFullYear() - birthDate.getFullYear();
+            // let birthDate = new Date(rangeValues[i][j]);
+
+            let date = new Date(rangeValues[i][j]);
+            let birthDate: Date = date;
+            let formattedDate: string = birthDate.toLocaleDateString('en-US', {
+                year: '2-digit',
+                month: '2-digit',
+                day: '2-digit'
+            });
+            
+            let today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+
           let m = today.getMonth() - birthDate.getMonth();
           if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { //account for dates where the birthday hasn't happened yet
             age--;
