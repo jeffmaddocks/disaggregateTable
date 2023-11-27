@@ -27,42 +27,39 @@ async function main(workbook: ExcelScript.Workbook) {
           thisrow.push(received);
   
         } else if (colName == "Gender") {
-            let usetext = "";
-            if (i == 0) {
-              usetext = 'Gender identification';
-            } else {
-              if (thiscell.includes("male") && !thiscell.includes("female")) { usetext = usetext + "Male; " }
-              if (thiscell.includes("female")) { usetext = usetext + "Female; " }
-              if (thiscell.includes("trans")) { usetext = usetext + "Transgender; " }
-              if (thiscell.includes("binary")) { usetext = usetext + "Non-binary or gender non-conforming person; " }
-              if (thiscell.includes("different")) { usetext = usetext + "Different identity; " }
-              if (thiscell.includes("answer")) { usetext = usetext + "I prefer not to answer; " }
-              usetext = usetext.slice(0, -2);  // Trim the last two characters
-            }
-            thisrow.push(usetext);
+          let usetext = "";
+          if (i == 0) {
+            usetext = 'Gender identification';
+          } else {
+            if (thiscell.includes("male") && !thiscell.includes("female")) { usetext = usetext + "Male; " }
+            if (thiscell.includes("female")) { usetext = usetext + "Female; " }
+            if (thiscell.includes("trans")) { usetext = usetext + "Transgender; " }
+            if (thiscell.includes("binary")) { usetext = usetext + "Non-binary or gender non-conforming person; " }
+            if (thiscell.includes("different")) { usetext = usetext + "Different identity; " }
+            if (thiscell.includes("answer")) { usetext = usetext + "I prefer not to answer; " }
+            usetext = usetext.slice(0, -2);  // Trim the last two characters
+          }
+          thisrow.push(usetext);
   
         } else if (colName.includes("Demographic Information")) {
-            let usetext = "";
-            if (i == 0) {
-              usetext = 'Race';
-            } else {
-                let splittext = thiscell.split(":"); //keep only the demographic information
-                if (splittext.length > 1) { //make sure there is a colon in the cell
-                    if (splittext[1].includes("indian") || splittext[1].includes("alaska") || splittext[1].includes("indigenous")) { usetext = usetext + "American Indian, Alaska Native, or Indigenous; " }
-                    if (splittext[1].includes("asian")) { usetext = usetext + "Asian or Asian American; " }
-                    if (splittext[1].includes("black") || splittext[1].includes("african")) { usetext = usetext + "Black or African American; " }
-                    if (splittext[1].includes("hispanic") || splittext[1].includes("latin") || splittext[1].includes("mexican")) { usetext = usetext + "Hispanic, Latino/a/x, or Latin American; " }
-                    if (splittext[1].includes("middle") || splittext[1].includes("north")) { usetext = usetext + "Middle Eastern, or North African; " }
-                    if (splittext[1].includes("multiple")) { usetext = usetext + "Multiple races or ethnicities; " }
-                    if (splittext[1].includes("hawaiian") || splittext[1].includes("islander")) { usetext = usetext + "Native Hawaiian or Other Pacific Islander; " }
-                    if (splittext[1].includes("white")) { usetext = usetext + "White/Caucasian; " }
-                    if (splittext[1].includes("other")) { usetext = usetext + "Other; " }
-                    if (splittext[1].includes("answer")) { usetext = usetext + "I prefer not to answer; " }
-                    usetext = usetext.slice(0, -2);  // Trim the last two characters
-                }
-            }
-            thisrow.push(usetext);
-      
+          let usetext = "";
+          if (i == 0) {
+            usetext = 'Race';
+          } else {
+            if (thiscell.includes("indian") || thiscell.includes("alaska") || thiscell.includes("indigenous")) { usetext = usetext + "American Indian, Alaska Native, or Indigenous; " }
+            if (thiscell.includes("asian")) { usetext = usetext + "Asian or Asian American; " }
+            if (thiscell.includes("black") || thiscell.includes("african")) { usetext = usetext + "Black or African American; " }
+            if ((!thiscell.includes("not hispanic")) && (thiscell.includes("hispanic") || thiscell.includes("latin") || thiscell.includes("mexican"))) { usetext = usetext + "Hispanic, Latino/a/x, or Latin American; " }
+            if (thiscell.includes("middle") || thiscell.includes("north")) { usetext = usetext + "Middle Eastern, or North African; " }
+            if (thiscell.includes("multiple")) { usetext = usetext + "Multiple races or ethnicities; " }
+            if (thiscell.includes("hawaiian") || thiscell.includes("islander")) { usetext = usetext + "Native Hawaiian or Other Pacific Islander; " }
+            if (thiscell.includes("white")) { usetext = usetext + "White/Caucasian; " }
+            if (thiscell.includes("other")) { usetext = usetext + "Other; " }
+            if (thiscell.includes("answer")) { usetext = usetext + "I prefer not to answer; " }
+            usetext = usetext.slice(0, -2);  // Trim the last two characters
+          }
+          thisrow.push(usetext);
+  
         } else if (colName == "Patient Date of Birth") {
   
           let excelDateValue = rangeValues[i][j] as number;
