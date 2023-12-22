@@ -15,11 +15,14 @@ async function main(workbook: ExcelScript.Workbook) {
   
         if (colName == "Received Vaccine") {
           let received = "";
-          if (thiscell.includes("covid")) { received = received + "Second (or later) dose of a COVID-19 vaccine; " }
+          // if (thiscell.includes("covid")) { received = received + "Second (or later) dose of a COVID-19 vaccine; " }
+          if (thiscell.includes("covid") || thiscell.includes("pfizer") || thiscell.includes("moderna")) { received = received + "Second (or later) dose of a COVID-19 vaccine; " }
           if (thiscell.includes("flu")) { received = received + "Flu/Influenza vaccine; " }
-          if (thiscell.includes("pneumococcal")) { received = received + "Pneumococcal; " }
-          if (thiscell.includes("shingles")) { received = received + "Shingles; " }
-          if (thiscell.includes("rsv")) { received = received + "Respiratory Syncytial Virus (RSV); " }
+          if (thiscell.includes("pneumococcal") || thiscell.includes("prevnar")) { received = received + "Pneumococcal; " }
+          if (thiscell.includes("shingles") || thiscell.includes("shingrix")) { received = received + "Shingles; " }
+          if (thiscell.includes("rsv") || thiscell.includes("arexvy")) { received = received + "Respiratory Syncytial Virus (RSV); " }
+          if (thiscell.includes("engerix")) { received = received + "HepB; " }
+          if (thiscell.includes("boostrix")) { received = received + "TDap; " }
           if (thiscell.includes("other")) { received = received + "Other; " }
           if (thiscell.includes("none")) { received = received + "None; " }
           received = received.slice(0, -2);  // Trim the last two characters
