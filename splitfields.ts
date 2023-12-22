@@ -34,8 +34,8 @@ async function main(workbook: ExcelScript.Workbook) {
         if (i == 0) {
           usetext = 'Gender identification';
         } else {
-          if (thiscell.includes("male") && !thiscell.includes("female")) { usetext = usetext + "Male; " }
-          if (thiscell.includes("female")) { usetext = usetext + "Female; " }
+          if ((thiscell.includes("male") && !thiscell.includes("female")) || thiscell == "m") { usetext = usetext + "Male; " }
+          if (thiscell.includes("female") || thiscell == "f") { usetext = usetext + "Female; " }
           if (thiscell.includes("trans")) { usetext = usetext + "Transgender; " }
           if (thiscell.includes("binary")) { usetext = usetext + "Non-binary or gender non-conforming person; " }
           if (thiscell.includes("different")) { usetext = usetext + "Different identity; " }
