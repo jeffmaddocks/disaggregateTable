@@ -8,130 +8,164 @@ async function main(workbook: ExcelScript.Workbook) {
 
   // Process the data
   for (let i = 0; i < rangeValues.length; i++) {  //looping through the rows
-    let thisrow: string[] = [];
-    for (let j = 0; j < rangeValues[i].length; j++) {  //looping through the columns
-      let thiscell: string = typeof rangeValues[i][j] === 'string' ? rangeValues[i][j].toLowerCase() : String(rangeValues[i][j]);
-      let colName: string = rangeValues[0][j].trim(); //this is the name of the column (row 0 of the column)
+    let thisrow: string[] = [
+      "Zip code",
+      "Vaccinations received",
+      "Other vaccinations received",
+      "Age range",
+      "Accompanied to event",
+      "Disabled",
+      "Disability type",
+      "Race",
+      "Other race",
+      "Gender identification",
+      "Other gender identification",
+      "Sexual orientation",
+      "Other sexual orientation",
+      "Primary language",
+      "Other primary language",
+      "Event Feedback"
+    ];
+    if (i>0) {
+      for (let j = 0; j < rangeValues[i].length; j++) {  //looping through the columns
+        let thiscell: string = typeof rangeValues[i][j] === 'string' ? rangeValues[i][j].toLowerCase() : String(rangeValues[i][j]);
+        let colName: string = rangeValues[0][j].trim(); //this is the name of the column (row 0 of the column)
 
-      if (colName == "Received Vaccine") {
-        let received = "";
-        // if (thiscell.includes("covid")) { received = received + "Second (or later) dose of a COVID-19 vaccine; " }
-        if (thiscell.includes("covid") || thiscell.includes("pfizer") || thiscell.includes("moderna")) { received = received + "Second (or later) dose of a COVID-19 vaccine; " }
-        if (thiscell.includes("flu")) { received = received + "Flu/Influenza vaccine; " }
-        if (thiscell.includes("pneumococcal") || thiscell.includes("prevnar")) { received = received + "Pneumococcal; " }
-        if (thiscell.includes("shingles") || thiscell.includes("shingrix")) { received = received + "Shingles; " }
-        if (thiscell.includes("rsv") || thiscell.includes("arexvy")) { received = received + "Respiratory Syncytial Virus (RSV); " }
-        if (thiscell.includes("engerix")) { received = received + "HepB; " }
-        if (thiscell.includes("boostrix")) { received = received + "TDap; " }
-        if (thiscell.includes("other")) { received = received + "Other; " }
-        if (thiscell.includes("none")) { received = received + "None; " }
-        received = received.slice(0, -2);  // Trim the last two characters
-        if (i == 0) { received = "Vaccinations received" }
-        thisrow.push(received);
+        if (colName == "Which Vaccine") {
+          let received = "";
+          let received_oth = "";
+          if (thiscell.includes("covid") || thiscell.includes("pfizer") || thiscell.includes("moderna") || thiscell.includes("novavax")) { received = received + "Second (or later) dose of a COVID-19 vaccine; " }
+          if (thiscell.includes("flu")) { received = received + "Flu/Influenza vaccine; " }
+          if (thiscell.includes("pneumococcal") || thiscell.includes("prevnar") || thiscell.includes("pneumonia")) { received = received + "Pneumococcal; " }
+          if (thiscell.includes("shingles") || thiscell.includes("shingrix")) { received = received + "Shingles; " }
+          if (thiscell.includes("rsv") || thiscell.includes("arexvy")) { received = received + "Respiratory Syncytial Virus (RSV); " }
+          if (
+              thiscell.includes("other") ||
+              thiscell.includes("engerix") ||
+              thiscell.includes("boostrix") ||
+              thiscell.includes("tdap") ||
+              thiscell.includes("dtap") ||
+              thiscell.includes("ipv-child") ||
+              thiscell.includes("menquadfi") ||
+              thiscell.includes("m-m-r") ||
+              thiscell.includes("tenivac") ||
+              thiscell.includes("varivax")
+            ) { 
+              received = received + "Other; " 
+              switch (true) {
+                case thiscell.includes("engerix"):
+                  received_oth = received_oth + "HepB; ";
+                  break;
+                case thiscell.includes("boostrix"):
+                  received_oth = received_oth + "TDap; ";
+                  break;
+                case thiscell.includes("boostrix") || thiscell.includes("tdap"):
+                  received_oth = received_oth + "TDap; ";
+                  break;
+                case thiscell.includes("dtap"):
+                  received_oth = received_oth + "DTaP; ";
+                  break;
+                case thiscell.includes("ipv-child"):
+                  received_oth = received_oth + "Polio; ";
+                  break;
+                case thiscell.includes("menquadfi"):
+                  received_oth = received_oth + "Meningococcal; ";
+                  break;
+                case thiscell.includes("m-m-r"):
+                  received_oth = received_oth + "MMR; ";
+                  break;
+                case thiscell.includes("tenivac"):
+                  received_oth = received_oth + "Tetanus/Diphtheria; ";
+                  break;
+                case thiscell.includes("varivax"):
+                  received_oth = received_oth + "Varicella; ";
+                  break;
+              }
+            }
+          if (thiscell.includes("none")) { received = received + "None; " }
+          received = received.slice(0, -2);  // Trim the last two characters
+          received_oth = received_oth.slice(0, -2);  // Trim the last two characters
+          thisrow[1] = received;
+          thisrow[2] = received_oth;
 
-      } else if (colName == "Gender") {
-        let usetext = "";
-        if (i == 0) {
-          usetext = 'Gender identification';
-        } else {
-          if ((thiscell.includes("male") && !thiscell.includes("female")) || thiscell == "m") { usetext = usetext + "Male; " }
-          if (thiscell.includes("female") || thiscell == "f") { usetext = usetext + "Female; " }
-          if (thiscell.includes("trans")) { usetext = usetext + "Transgender; " }
-          if (thiscell.includes("binary")) { usetext = usetext + "Non-binary or gender non-conforming person; " }
-          if (thiscell.includes("different")) { usetext = usetext + "Different identity; " }
-          if (thiscell.includes("answer")) { usetext = usetext + "I prefer not to answer; " }
-          usetext = usetext.slice(0, -2);  // Trim the last two characters
-        }
-        thisrow.push(usetext);
-
-      } else if (colName.includes("Demographic Information")) {
-        let usetext = "";
-        if (i == 0) {
-          usetext = 'Race';
-        } else {
-          if (thiscell.includes("indian") || thiscell.includes("alaska") || thiscell.includes("indigenous")) { usetext = usetext + "American Indian, Alaska Native, or Indigenous; " }
-          if (thiscell.includes("asian")) { usetext = usetext + "Asian or Asian American; " }
-          if (thiscell.includes("black") || thiscell.includes("african")) { usetext = usetext + "Black or African American; " }
-          if ((!thiscell.includes("not hispanic")) && (thiscell.includes("hispanic") || thiscell.includes("latin") || thiscell.includes("mexican"))) { usetext = usetext + "Hispanic, Latino/a/x, or Latin American; " }
-          if (thiscell.includes("middle") || thiscell.includes("north")) { usetext = usetext + "Middle Eastern, or North African; " }
-          if (thiscell.includes("multiple")) { usetext = usetext + "Multiple races or ethnicities; " }
-          if (thiscell.includes("hawaiian") || thiscell.includes("islander")) { usetext = usetext + "Native Hawaiian or Other Pacific Islander; " }
-          if (thiscell.includes("white")) { usetext = usetext + "White/Caucasian; " }
-          if (thiscell.includes("other")) { usetext = usetext + "Other; " }
-          if (thiscell.includes("answer")) { usetext = usetext + "I prefer not to answer; " }
-          usetext = usetext.slice(0, -2);  // Trim the last two characters
-        }
-        thisrow.push(usetext);
-
-      } else if (colName == "Age") {
-
-        let age = rangeValues[i][j] as number;
-        let ageCategory: string;
-        if (age < 18) {
-          ageCategory = 'Under age 18';
-        } else if (age >= 18 && age < 50) {
-          ageCategory = 'Age 18 - 49';
-        } else if (age >= 50 && age < 55) {
-          ageCategory = 'Age 50 - 54';
-        } else if (age >= 55 && age < 60) {
-          ageCategory = 'Age 55 - 59';
-        } else if (age >= 60 && age < 65) {
-          ageCategory = 'Age 60 - 64';
-        } else if (age >= 65 && age < 75) {
-          ageCategory = 'Age 65 - 74';
-        } else if (age >= 75 && age < 85) {
-          ageCategory = 'Age 75 - 84';
-        } else if (age >= 85) {
-          ageCategory = 'Age 85+';
-        } else {
+        } else if (colName == "Gender at Birth") {
+          let usetext = "";
           if (i == 0) {
-            ageCategory = 'Age range';
+            usetext = 'Gender identification';
           } else {
-            ageCategory = 'I prefer not to answer';
+            if ((thiscell.includes("male") && !thiscell.includes("female")) || thiscell == "m") { usetext = usetext + "Male; " }
+            if (thiscell.includes("female") || thiscell == "f") { usetext = usetext + "Female; " }
+            if (thiscell.includes("trans")) { usetext = usetext + "Transgender; " }
+            if (thiscell.includes("binary")) { usetext = usetext + "Non-binary or gender non-conforming person; " }
+            if (thiscell.includes("different")) { usetext = usetext + "Different identity; " }
+            if (thiscell.includes("answer")) { usetext = usetext + "I prefer not to answer; " }
+            usetext = usetext.slice(0, -2);  // Trim the last two characters
           }
+          // thisrow.push(usetext);
+          thisrow[9] = usetext;
+
+        } else if (colName.includes("Demographic Information")) {
+          let usetext = "";
+          if (i == 0) {
+            usetext = 'Race';
+          } else {
+            if (thiscell.includes("indian") || thiscell.includes("alaska") || thiscell.includes("indigenous")) { usetext = usetext + "American Indian, Alaska Native, or Indigenous; " }
+            if (thiscell.includes("asian")) { usetext = usetext + "Asian or Asian American; " }
+            if (thiscell.includes("black") || thiscell.includes("african")) { usetext = usetext + "Black or African American; " }
+            if ((!thiscell.includes("not hispanic")) && (thiscell.includes("hispanic") || thiscell.includes("latin") || thiscell.includes("mexican"))) { usetext = usetext + "Hispanic, Latino/a/x, or Latin American; " }
+            if (thiscell.includes("middle") || thiscell.includes("north")) { usetext = usetext + "Middle Eastern, or North African; " }
+            if (thiscell.includes("multiple")) { usetext = usetext + "Multiple races or ethnicities; " }
+            if (thiscell.includes("hawaiian") || thiscell.includes("islander")) { usetext = usetext + "Native Hawaiian or Other Pacific Islander; " }
+            if (thiscell.includes("white")) { usetext = usetext + "White/Caucasian; " }
+            if (thiscell.includes("other")) { usetext = usetext + "Other; " }
+            if (thiscell.includes("answer")) { usetext = usetext + "I prefer not to answer; " }
+            usetext = usetext.slice(0, -2);  // Trim the last two characters
+          }
+          // thisrow.push(usetext);
+          thisrow[7] = usetext;
+
+        } else if (colName == "Age") {
+
+          let age = rangeValues[i][j] as number;
+          let ageCategory: string;
+          if (age < 18) {
+            ageCategory = 'Under age 18';
+          } else if (age >= 18 && age < 50) {
+            ageCategory = 'Age 18 - 49';
+          } else if (age >= 50 && age < 55) {
+            ageCategory = 'Age 50 - 54';
+          } else if (age >= 55 && age < 60) {
+            ageCategory = 'Age 55 - 59';
+          } else if (age >= 60 && age < 65) {
+            ageCategory = 'Age 60 - 64';
+          } else if (age >= 65 && age < 75) {
+            ageCategory = 'Age 65 - 74';
+          } else if (age >= 75 && age < 85) {
+            ageCategory = 'Age 75 - 84';
+          } else if (age >= 85) {
+            ageCategory = 'Age 85+';
+          } else {
+            if (i == 0) {
+              ageCategory = 'Age range';
+            } else {
+              ageCategory = 'I prefer not to answer';
+            }
+          }
+          // thisrow.push(ageCategory);
+          thisrow[3] = ageCategory;
+        } else {
+          thisrow[0] = ""; //zip code
+          thisrow[4] = ""; //accompanied to event
+          thisrow[5] = ""; //disabled
+          thisrow[6] = ""; //disability type
+          thisrow[8] = ""; //other race
+          thisrow[10] = ""; //other gender identification
+          thisrow[11] = ""; // sexual orientation
+          thisrow[12] = ""; // other sexual orientation
+          thisrow[13] = ""; // primary language
+          thisrow[14] = ""; // other primary language
+          thisrow[15] = ""; // event feedback
         }
-        thisrow.push(ageCategory);
-
-      // } else if (colName == "Patient Date of Birth") {
-
-      //   let excelDateValue = rangeValues[i][j] as number;
-      //   let birthDate = new Date(Math.round((excelDateValue - 25569) * 86400 * 1000));
-
-      //   let today = new Date();
-      //   let age = today.getFullYear() - birthDate.getFullYear();
-
-      //   let m = today.getMonth() - birthDate.getMonth();
-      //   if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { //account for dates where the birthday hasn't happened yet
-      //     age--;
-      //   }
-      //   let ageCategory: string;
-        // if (age < 18) {
-        //   ageCategory = 'Under age 18';
-        // } else if (age >= 18 && age < 50) {
-        //   ageCategory = 'Age 18 - 49';
-        // } else if (age >= 50 && age < 55) {
-        //   ageCategory = 'Age 50 - 54';
-        // } else if (age >= 55 && age < 60) {
-        //   ageCategory = 'Age 55 - 59';
-        // } else if (age >= 60 && age < 65) {
-        //   ageCategory = 'Age 60 - 64';
-        // } else if (age >= 65 && age < 75) {
-        //   ageCategory = 'Age 65 - 74';
-        // } else if (age >= 75 && age < 85) {
-        //   ageCategory = 'Age 75 - 84';
-        // } else if (age >= 85) {
-        //   ageCategory = 'Age 85+';
-        // } else {
-      //     if (i == 0) {
-      //       ageCategory = 'Age range';
-      //     } else {
-      //       ageCategory = 'I prefer not to answer';
-      //     }
-      //   }
-      //   thisrow.push(ageCategory);
-
-      } else { // if the column is named anything else, just push it
-        thisrow.push(thiscell);
 
       }
     }
