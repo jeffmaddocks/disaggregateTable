@@ -34,7 +34,22 @@ async function main(workbook: ExcelScript.Workbook) {
         let thiscell: string = typeof rangeValues[i][j] === 'string' ? rangeValues[i][j].toLowerCase() : String(rangeValues[i][j]);
         let colName: string = rangeValues[0][j].trim(); //this is the name of the column (row 0 of the column)
 
-        if (colName == "Which Vaccine") {
+        if (colName == "Postal / Zip Code") {
+          let usezip = "";
+
+          usezip = thiscell;
+          if (usezip.includes('-')) {
+            usezip = usezip.split('-')[0]; // Trim off anything after a dash
+          }
+          if (/^[0-9]+$/.test(usezip) && parseInt(usezip) >= 0) { // Check if usezip is a positive number
+              usezip = usezip.padStart(5, '0'); // Format usezip as a 5-digit zip code
+          } else {
+              usezip = "19473"; // set to the main skipback zip code if negative or includes any letters
+          }
+
+          thisrow[0] = usezip;
+
+        } else if (colName == "Which Vaccine") {
           let received = "";
           let received_oth = "";
           if (thiscell.includes("covid") || thiscell.includes("pfizer") || thiscell.includes("moderna") || thiscell.includes("novavax")) { received = received + "Second (or later) dose of a COVID-19 vaccine; " }
@@ -91,41 +106,6 @@ async function main(workbook: ExcelScript.Workbook) {
           thisrow[1] = received;
           thisrow[2] = received_oth;
 
-        } else if (colName == "Gender at Birth") {
-          let usetext = "";
-          if (i == 0) {
-            usetext = 'Gender identification';
-          } else {
-            if ((thiscell.includes("male") && !thiscell.includes("female")) || thiscell == "m") { usetext = usetext + "Male; " }
-            if (thiscell.includes("female") || thiscell == "f") { usetext = usetext + "Female; " }
-            if (thiscell.includes("trans")) { usetext = usetext + "Transgender; " }
-            if (thiscell.includes("binary")) { usetext = usetext + "Non-binary or gender non-conforming person; " }
-            if (thiscell.includes("different")) { usetext = usetext + "Different identity; " }
-            if (thiscell.includes("answer")) { usetext = usetext + "I prefer not to answer; " }
-            usetext = usetext.slice(0, -2);  // Trim the last two characters
-          }
-          // thisrow.push(usetext);
-          thisrow[9] = usetext;
-
-        } else if (colName.includes("Demographic Information")) {
-          let usetext = "";
-          if (i == 0) {
-            usetext = 'Race';
-          } else {
-            if (thiscell.includes("indian") || thiscell.includes("alaska") || thiscell.includes("indigenous")) { usetext = usetext + "American Indian, Alaska Native, or Indigenous; " }
-            if (thiscell.includes("asian")) { usetext = usetext + "Asian or Asian American; " }
-            if (thiscell.includes("black") || thiscell.includes("african")) { usetext = usetext + "Black or African American; " }
-            if ((!thiscell.includes("not hispanic")) && (thiscell.includes("hispanic") || thiscell.includes("latin") || thiscell.includes("mexican"))) { usetext = usetext + "Hispanic, Latino/a/x, or Latin American; " }
-            if (thiscell.includes("middle") || thiscell.includes("north")) { usetext = usetext + "Middle Eastern, or North African; " }
-            if (thiscell.includes("multiple")) { usetext = usetext + "Multiple races or ethnicities; " }
-            if (thiscell.includes("hawaiian") || thiscell.includes("islander")) { usetext = usetext + "Native Hawaiian or Other Pacific Islander; " }
-            if (thiscell.includes("white")) { usetext = usetext + "White/Caucasian; " }
-            if (thiscell.includes("other")) { usetext = usetext + "Other; " }
-            if (thiscell.includes("answer")) { usetext = usetext + "I prefer not to answer; " }
-            usetext = usetext.slice(0, -2);  // Trim the last two characters
-          }
-          thisrow[7] = usetext;
-
         } else if (colName == "Age") {
 
           let age = rangeValues[i][j] as number;
@@ -155,27 +135,42 @@ async function main(workbook: ExcelScript.Workbook) {
           }
           thisrow[3] = ageCategory;
 
-        } else if (colName == "Postal / Zip Code") {
-          let usezip = "";
-
-
-          usezip = thiscell;
-          if (usezip.includes('-')) {
-            usezip = usezip.split('-')[0]; // Trim off anything after a dash
-          }
-          // if (usezip.length ==4) {
-          //   usezip = "0" + usezip; // Add a leading zero if it's only 4 digits
-          // }
-          if (/^[0-9]+$/.test(usezip) && parseInt(usezip) >= 0) { // Check if usezip is a positive number
-              usezip = usezip.padStart(5, '0'); // Format usezip as a 5-digit zip code
+        } else if (colName.includes("Demographic Information")) {
+          let usetext = "";
+          if (i == 0) {
+            usetext = 'Race';
           } else {
-              usezip = "19473"; // set to the main skipback zip code if negative or includes any letters
+            if (thiscell.includes("indian") || thiscell.includes("alaska") || thiscell.includes("indigenous")) { usetext = usetext + "American Indian, Alaska Native, or Indigenous; " }
+            if (thiscell.includes("asian")) { usetext = usetext + "Asian or Asian American; " }
+            if (thiscell.includes("black") || thiscell.includes("african")) { usetext = usetext + "Black or African American; " }
+            if ((!thiscell.includes("not hispanic")) && (thiscell.includes("hispanic") || thiscell.includes("latin") || thiscell.includes("mexican"))) { usetext = usetext + "Hispanic, Latino/a/x, or Latin American; " }
+            if (thiscell.includes("middle") || thiscell.includes("north")) { usetext = usetext + "Middle Eastern, or North African; " }
+            if (thiscell.includes("multiple")) { usetext = usetext + "Multiple races or ethnicities; " }
+            if (thiscell.includes("hawaiian") || thiscell.includes("islander")) { usetext = usetext + "Native Hawaiian or Other Pacific Islander; " }
+            if (thiscell.includes("white")) { usetext = usetext + "White/Caucasian; " }
+            if (thiscell.includes("other")) { usetext = usetext + "Other; " }
+            if (thiscell.includes("answer")) { usetext = usetext + "I prefer not to answer; " }
+            usetext = usetext.slice(0, -2);  // Trim the last two characters
           }
+          thisrow[7] = usetext;
 
-          thisrow[0] = usezip;
+        } else if (colName == "Gender at Birth") {
+          let usetext = "";
+          if (i == 0) {
+            usetext = 'Gender identification';
+          } else {
+            if ((thiscell.includes("male") && !thiscell.includes("female")) || thiscell == "m") { usetext = usetext + "Male; " }
+            if (thiscell.includes("female") || thiscell == "f") { usetext = usetext + "Female; " }
+            if (thiscell.includes("trans")) { usetext = usetext + "Transgender; " }
+            if (thiscell.includes("binary")) { usetext = usetext + "Non-binary or gender non-conforming person; " }
+            if (thiscell.includes("different")) { usetext = usetext + "Different identity; " }
+            if (thiscell.includes("answer")) { usetext = usetext + "I prefer not to answer; " }
+            usetext = usetext.slice(0, -2);  // Trim the last two characters
+          }
+          // thisrow.push(usetext);
+          thisrow[9] = usetext;
 
         }
-
       }
     }
     lst.push(thisrow);
