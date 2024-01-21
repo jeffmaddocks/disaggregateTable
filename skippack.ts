@@ -172,7 +172,7 @@ async function main(workbook: ExcelScript.Workbook) {
             if (thiscell.includes("hawaiian") || thiscell.includes("islander")) { usetext = usetext + "Native Hawaiian or Other Pacific Islander; " }
             if (thiscell.includes("white")) { usetext = usetext + "White/Caucasian; " }
             if (thiscell.includes("other")) { usetext = usetext + "Other; " }
-            if (thiscell.includes("answer") || thiscell == "") { usetext = usetext + "I prefer not to answer; " }
+            if (thiscell.includes("answer") || thiscell == "" || usetext == "") { usetext = usetext + "I prefer not to answer; " }
             usetext = usetext.slice(0, -2);  // Trim the last two characters
           }
           thisrow[7] = usetext;
