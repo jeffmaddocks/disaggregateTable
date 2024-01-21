@@ -6,6 +6,8 @@ async function main(workbook: ExcelScript.Workbook) {
   let rangeValues = range.getValues();
   let lst: string[] = [];
 
+  let defaultzip = "19473";
+
   // Process the data
   for (let i = 0; i < rangeValues.length; i++) {  //looping through the rows
     let thisrow: string[] = [
@@ -52,7 +54,7 @@ async function main(workbook: ExcelScript.Workbook) {
           if (/^[0-9]+$/.test(usezip) && parseInt(usezip) >= 0) { // Check if usezip is a positive number
               usezip = usezip.padStart(5, '0'); // Format usezip as a 5-digit zip code
           } else {
-              usezip = "19473"; // set to the main skipback zip code if negative or includes any letters
+              usezip = defaultzip; // set to the default zip code if negative or includes any letters
           }
 
           thisrow[0] = usezip;
@@ -116,7 +118,9 @@ async function main(workbook: ExcelScript.Workbook) {
           received_oth = received_oth.slice(0, -2);  // Trim the last two characters
           thisrow[1] = received;
           thisrow[2] = received_oth;
-          if (skiptonext) {
+          if (skiptonext) { // if no vaccine received then insert a blank row
+            thisrow[0] = "";
+            thisrow[1] = "";
             break;
           }
 
@@ -181,7 +185,7 @@ async function main(workbook: ExcelScript.Workbook) {
             if (thiscell.includes("female") || thiscell == "f") { usetext = usetext + "Female; " }
             if (thiscell.includes("trans")) { usetext = usetext + "Transgender; " }
             if (thiscell.includes("binary")) { usetext = usetext + "Non-binary or gender non-conforming person; " }
-            if (thiscell.includes("different")) { usetext = usetext + "Different identity; " }
+            if (thiscell.includes("different") || thiscell.includes("other")) { usetext = usetext + "Different identity; " }
             if (thiscell.includes("answer") || thiscell == "") { usetext = usetext + "I prefer not to answer; " }
             usetext = usetext.slice(0, -2);  // Trim the last two characters
           }
