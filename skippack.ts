@@ -118,9 +118,10 @@ async function main(workbook: ExcelScript.Workbook) {
           received_oth = received_oth.slice(0, -2);  // Trim the last two characters
           thisrow[1] = received;
           thisrow[2] = received_oth;
-          if (skiptonext) { // if no vaccine received then insert a blank row
-            thisrow[0] = "";
-            thisrow[1] = "";
+          if (skiptonext) {
+            // if no vaccine received then insert a blank row
+            // thisrow[0] =  "";
+            // thisrow[1] = "";
             break;
           }
 
