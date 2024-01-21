@@ -27,6 +27,9 @@ async function main(workbook: ExcelScript.Workbook) {
       "Event Feedback"
     ];
     if (i>0) {
+      for (let k = 0; k < thisrow.length; k++) {
+        thisrow[k] = "";
+      }
       for (let j = 0; j < rangeValues[i].length; j++) {  //looping through the columns
         let thiscell: string = typeof rangeValues[i][j] === 'string' ? rangeValues[i][j].toLowerCase() : String(rangeValues[i][j]);
         let colName: string = rangeValues[0][j].trim(); //this is the name of the column (row 0 of the column)
@@ -121,7 +124,6 @@ async function main(workbook: ExcelScript.Workbook) {
             if (thiscell.includes("answer")) { usetext = usetext + "I prefer not to answer; " }
             usetext = usetext.slice(0, -2);  // Trim the last two characters
           }
-          // thisrow.push(usetext);
           thisrow[7] = usetext;
 
         } else if (colName == "Age") {
@@ -151,20 +153,27 @@ async function main(workbook: ExcelScript.Workbook) {
               ageCategory = 'I prefer not to answer';
             }
           }
-          // thisrow.push(ageCategory);
           thisrow[3] = ageCategory;
-        } else {
-          thisrow[0] = ""; //zip code
-          thisrow[4] = ""; //accompanied to event
-          thisrow[5] = ""; //disabled
-          thisrow[6] = ""; //disability type
-          thisrow[8] = ""; //other race
-          thisrow[10] = ""; //other gender identification
-          thisrow[11] = ""; // sexual orientation
-          thisrow[12] = ""; // other sexual orientation
-          thisrow[13] = ""; // primary language
-          thisrow[14] = ""; // other primary language
-          thisrow[15] = ""; // event feedback
+
+        } else if (colName == "Postal / Zip Code") {
+          let usezip = "";
+
+
+          usezip = thiscell;
+          if (usezip.includes('-')) {
+            usezip = usezip.split('-')[0]; // Trim off anything after a dash
+          }
+          // if (usezip.length ==4) {
+          //   usezip = "0" + usezip; // Add a leading zero if it's only 4 digits
+          // }
+          if (/^[0-9]+$/.test(usezip) && parseInt(usezip) >= 0) { // Check if usezip is a positive number
+              usezip = usezip.padStart(5, '0'); // Format usezip as a 5-digit zip code
+          } else {
+              usezip = "19473"; // set to the main skipback zip code if negative or includes any letters
+          }
+
+          thisrow[0] = usezip;
+
         }
 
       }
@@ -174,7 +183,7 @@ async function main(workbook: ExcelScript.Workbook) {
 
   // Create a new sheet
   let newSheet = workbook.addWorksheet(sheet.getName() + '_split');
-  // newSheet.getRange().setNumberFormat('@');
+  newSheet.getRange().setNumberFormat('@');
 
   // Write data to the new sheet
   for (let i = 0; i < lst.length; i++) { //looping through the rows
