@@ -26,13 +26,21 @@ async function main(workbook: ExcelScript.Workbook) {
       "Other primary language",
       "Event Feedback"
     ];
+    
     if (i>0) {
-      for (let k = 0; k < thisrow.length; k++) {
-        thisrow[k] = "";
+
+      let skiptonext = false; // start off each row assuming that there will be a vaccine received
+
+      for (let k = 0; k < thisrow.length; k++) { // loop through all the columns of the cumulus sheet
+        thisrow[k] = ""; // set all cells to be blank unless they are filled below
       }
+
       for (let j = 0; j < rangeValues[i].length; j++) {  //looping through the columns
         let thiscell: string = typeof rangeValues[i][j] === 'string' ? rangeValues[i][j].toLowerCase() : String(rangeValues[i][j]);
         let colName: string = rangeValues[0][j].trim(); //this is the name of the column (row 0 of the column)
+        if (skiptonext) {
+          break;
+        }
 
         if (colName == "Postal / Zip Code") {
           let usezip = "";
@@ -100,17 +108,25 @@ async function main(workbook: ExcelScript.Workbook) {
                   break;
               }
             }
-          if (thiscell.includes("none")) { received = received + "None; " }
+          if (thiscell.includes("none") || thiscell == "") { 
+            received = received + "None; " 
+            skiptonext = true;
+          }
           received = received.slice(0, -2);  // Trim the last two characters
           received_oth = received_oth.slice(0, -2);  // Trim the last two characters
           thisrow[1] = received;
           thisrow[2] = received_oth;
+          if (skiptonext) {
+            break;
+          }
 
         } else if (colName == "Age") {
 
           let age = rangeValues[i][j] as number;
           let ageCategory: string;
-          if (age < 18) {
+          if (thiscell == "" ) {
+            ageCategory = 'I prefer not to answer';
+          } else if (age >=0 && age < 18) {
             ageCategory = 'Under age 18';
           } else if (age >= 18 && age < 50) {
             ageCategory = 'Age 18 - 49';
@@ -130,10 +146,12 @@ async function main(workbook: ExcelScript.Workbook) {
             if (i == 0) {
               ageCategory = 'Age range';
             } else {
-              ageCategory = 'I prefer not to answer';
+              // ageCategory = 'I prefer not to answer';
             }
           }
           thisrow[3] = ageCategory;
+          thisrow[4] = "I prefer not to answer"; // Accompanied to event
+          thisrow[5] = "I prefer not to answer"; // Disabled
 
         } else if (colName.includes("Demographic Information")) {
           let usetext = "";
@@ -149,7 +167,7 @@ async function main(workbook: ExcelScript.Workbook) {
             if (thiscell.includes("hawaiian") || thiscell.includes("islander")) { usetext = usetext + "Native Hawaiian or Other Pacific Islander; " }
             if (thiscell.includes("white")) { usetext = usetext + "White/Caucasian; " }
             if (thiscell.includes("other")) { usetext = usetext + "Other; " }
-            if (thiscell.includes("answer")) { usetext = usetext + "I prefer not to answer; " }
+            if (thiscell.includes("answer") || thiscell == "") { usetext = usetext + "I prefer not to answer; " }
             usetext = usetext.slice(0, -2);  // Trim the last two characters
           }
           thisrow[7] = usetext;
@@ -164,11 +182,13 @@ async function main(workbook: ExcelScript.Workbook) {
             if (thiscell.includes("trans")) { usetext = usetext + "Transgender; " }
             if (thiscell.includes("binary")) { usetext = usetext + "Non-binary or gender non-conforming person; " }
             if (thiscell.includes("different")) { usetext = usetext + "Different identity; " }
-            if (thiscell.includes("answer")) { usetext = usetext + "I prefer not to answer; " }
+            if (thiscell.includes("answer") || thiscell == "") { usetext = usetext + "I prefer not to answer; " }
             usetext = usetext.slice(0, -2);  // Trim the last two characters
           }
           // thisrow.push(usetext);
           thisrow[9] = usetext;
+          thisrow[11] = "I prefer not to answer"; // sexual orientation
+          thisrow[13] = "I prefer not to answer"; // primary language
 
         }
       }
