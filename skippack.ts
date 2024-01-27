@@ -44,7 +44,7 @@ async function main(workbook: ExcelScript.Workbook) {
           break;
         }
 
-        if (colName == "Postal / Zip Code") {
+        if (colName == "Zip") {
           let usezip = "";
 
           usezip = thiscell;
@@ -59,7 +59,7 @@ async function main(workbook: ExcelScript.Workbook) {
 
           thisrow[0] = usezip;
 
-        } else if (colName == "Which Vaccine") {
+        } else if (colName == "Vaccine") {
           let received = "";
           let received_oth = "";
           if (thiscell.includes("covid") || thiscell.includes("pfizer") || thiscell.includes("moderna") || thiscell.includes("novavax")) { received = received + "Second (or later) dose of a COVID-19 vaccine; " }
@@ -158,7 +158,7 @@ async function main(workbook: ExcelScript.Workbook) {
           thisrow[4] = "I prefer not to answer"; // Accompanied to event
           thisrow[5] = "I prefer not to answer"; // Disabled
 
-        } else if (colName.includes("Demographic Information")) {
+        } else if (colName.includes("Ethnicity")) {
           let usetext = "";
           if (i == 0) {
             usetext = 'Race';
@@ -177,7 +177,7 @@ async function main(workbook: ExcelScript.Workbook) {
           }
           thisrow[7] = usetext;
 
-        } else if (colName == "Gender at Birth") {
+        } else if (colName == "Gender") {
           let usetext = "";
           if (i == 0) {
             usetext = 'Gender identification';
